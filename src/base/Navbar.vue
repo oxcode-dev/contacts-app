@@ -11,7 +11,7 @@
                 <div class="column is-three-fifths">
                     <div class="field">
                         <p class="control has-icons-left has-icons-right">
-                            <input class="input searchbar" v-model="search" type="text" @keyup="searchContact" placeholder="Email">
+                            <input class="input searchbar" v-model="search" type="text" @keyup="searchContact" placeholder="Search Contacts...">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-search"></i>
                             </span>
