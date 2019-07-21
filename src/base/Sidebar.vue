@@ -6,10 +6,15 @@
 
         <div class="sidebar-div">
             <ul class="menu">
-                <li><div><i class="fas fa-user" style="margin-right: 5px; color:#4caf50"></i> Contacts</div></li>
+                <li><div @click="handleLabelSearch('')"><i class="fas fa-user" style="margin-right: 5px; color:#4caf50"></i> Contacts ({{ countContact }})</div></li>
                 <li v-for="(label, key) in getLabel" :key="key">
-                    <div>
-                        <span><i class="fas fa-user-tag" style="margin-right: 5px; color:#4caf50"></i> {{ label.name }}</span>
+                    <div style="display: flex; justify-content: space-between; text-transform: capitalize">
+                        <span @click="handleLabelSearch(label.id)"><i class="fas fa-user-tag" style="margin-right: 5px; color:#4caf50"></i> {{ label.name }}</span>
+
+                        <span class="sidebar-link">
+                            <a href="#" @click.prevent="handleEditLabel(label)" style="margin-right: 10px; color: #fff;"><i class="fa fa-edit"></i></a>
+                            <a href="#" @click.prevent="handleDeleteLabel(label)" style="color: #fff;"><i class="fa fa-trash"></i></a>
+                        </span>
                     </div>
                 </li>
             </ul>
@@ -20,78 +25,9 @@
         </div>
 
         <Modal :active.sync="viewModal" @closeViewContact="viewModal = $event">
-            <div class="card" v-if="modalItem === 'form-contact'">
-                <header class="card-header">
-                    <div class="title is-4">
-                        Add Contact
-                    </div>
-                </header>
-                <hr style="margin:0">
+            <ContactForm :contact="contact" class="card" v-if="modalItem === 'form-contact'" @close="viewModal = $event" />
 
-                <div class="card-content has-text-left">
-                    <div class="content">
-                        <form @submit.prevent="createContact">
-                            <div class="field">
-                                <label class="label">Name</label>
-                                <div class="control">
-                                    <input class="input" required v-model="form.name" type="text" placeholder="e.g John Doe">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Email</label>
-                                <div class="control">
-                                    <input class="input" required type="email" v-model="form.email" placeholder="e.g john@doe.com">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Phone</label>
-                                <div class="control">
-                                    <input class="input" required type="text" v-model="form.phone" placeholder="e.g +234 8090342345">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Address</label>
-                                <div class="control">
-                                    <input class="input" type="text" v-model="form.address" placeholder="e.g Lagos Nigeria">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <button class="button is-primary">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-             <div class="card" v-if="modalItem === 'form-add-label'">
-                <header class="card-header">
-                    <div class="title is-4">
-                        {{ labelTitle }}
-                    </div>
-                </header>
-                <hr style="margin:0">
-
-                <div class="card-content has-text-left">
-                    <div class="content">
-                        <form @submit.prevent="onSubmitLabel">
-                            <div class="field">
-                                <label class="label">Name</label>
-                                <div class="control">
-                                    <input class="input" required v-model="label.name" type="text" placeholder="e.g Associates">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <button class="button is-primary">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <LabelForm :label.sync="label" v-if="modalItem === 'label-form'" @close="viewModal = $event" />
         </Modal>
     </div>
 </template>
@@ -99,67 +35,64 @@
 
 <script>
 import Modal from '@/components/modal'
+import LabelForm from '@/components/LabelForm'
+import ContactForm from '@/components/ContactForm'
+
 export default {
     components:{
-        Modal
+        Modal, ContactForm, LabelForm
     },
     data(){
         return{
             viewModal: false,
-            form: this.resetForm(),
+            contact: this.resetForm(),
             modalItem: '',
             label: {},
-            labelTitle: ''
         }
     },
 
     computed:{
-        lastItemId(){
+        countContact(){
             let arr = this.$store.state.contact.contacts;
-            let lastId = arr.length - 1;
-            return arr[lastId].id + 1;
+            return arr.length;
         },
-        lastLabelId(){
-            let arr = this.$store.state.label.labels;
-            let lastId = arr.length - 1;
-            return arr[lastId].id + 1;
-        },
+
         getLabel() {
             return this.$store.state.label.labels;
         }
     },
     methods:{
-        onSubmitLabel(){
-            if(!this.label.id){
-                this.label.id = this.lastLabelId;
-                this.$store.dispatch('addLabel', this.label);
-                this.viewModal = !this.viewModal;
-                alert('Label created successfully!');
-                this.label = {
-                    name: '',
-                    id: ''
-                };
+        handleLabelSearch(id){
+            this.$store.dispatch('searchContact', this.search);
+            this.$store.dispatch('labelSearchContact', id)
+        },
+
+        handleDeleteLabel(obj){
+            if(confirm("Deleted anyway?")){
+                this.$store.dispatch('deleteLabel', obj);
+                alert("Label Deleted Successfully!");
             }
-            // console.log(this.label)
+        },
+
+        handleEditLabel(obj){
+            this.viewModal = true;
+            this.modalItem = 'label-form';
+            this.label = obj;
         },
 
         handleAddLabel(){
             this.viewModal = true;
-            this.modalItem = 'form-add-label';
-            this.labelTitle = 'Add Label';
+            this.modalItem = 'label-form';
+            this.label = {
+                name: '',
+                id: ''
+            };
         },
 
         handleCreateContact(){
             this.viewModal = true;
-            this.modalItem = 'form-contact'
-        },
-
-        createContact(){
-            this.form.id = this.lastItemId;
-            this.$store.dispatch('addContact', this.form);
-            this.viewModal = !this.viewModal;
-            alert('Contact created successfully!');
-            this.form = this.resetForm();
+            this.modalItem = 'form-contact';
+            this.contact = this.resetForm();
         },
 
         resetForm(){
@@ -167,7 +100,8 @@ export default {
                 name:'',
                 email: '',
                 address: '',
-                phone: ''
+                phone: '',
+                label: ''
             }
         }
     }
@@ -194,5 +128,13 @@ export default {
     background-color:#5DD262;
     border-radius: 0 25px 25px 0;
     color: #ffffff;
+    display: flex !important;
+}
+.sidebar-link{
+    padding: 0!important;
+    display: none !important;
+}
+.sidebar .menu li div:hover .sidebar-link{
+     display: flex !important;
 }
 </style>

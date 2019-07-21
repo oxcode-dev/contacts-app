@@ -1,7 +1,7 @@
 <template>
     <div style="padding: 20px 10px">
         <div>
-            <p class="title2 is-5 is-uppercase has-text-left">Contacts({{ contacts.length }})</p>
+            <p class="title2 is-5 is-uppercase has-text-left">{{ `${title} (${contacts.length})` }}</p>
         </div>
         <div>
             <table class="table is-striped is-fullwidth  is-hoverable">
@@ -33,64 +33,19 @@
 
         <Modal :active.sync="viewModal" @closeViewContact="viewModal = $event">
             <ViewContact :contact.sync="contact" v-if="modalItem === 'view'" />
-            
-            <div class="card" v-else-if="modalItem === 'form'">
-                <header class="card-header">
-                   <div class="title is-4">
-                       Update Contact
-                   </div>
-                </header>
-                <hr style="margin:0">
 
-                <div class="card-content has-text-left">
-                    <div class="content">
-                        <form @submit.prevent="editContact">
-                            <div class="field">
-                                <label class="label">Name</label>
-                                <div class="control">
-                                    <input class="input" required v-model="form.name" type="text" placeholder="e.g John Doe">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Email</label>
-                                <div class="control">
-                                    <input class="input" required type="email" v-model="form.email" placeholder="e.g john@doe.com">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Phone</label>
-                                <div class="control">
-                                    <input class="input" required type="text" v-model="form.phone" placeholder="e.g +234 8090342345">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Address</label>
-                                <div class="control">
-                                    <input class="input" type="text" v-model="form.address" placeholder="e.g Lagos Nigeria">
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <button class="button is-primary">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
+            <ContactForm :contact.sync="contact" class="card" v-if="modalItem === 'form-contact'" @close="viewModal = $event" />            
         </Modal>
     </div>
 </template>
 
 <script>
 import ViewContact from '@/components/ViewContact.vue'
+import ContactForm from '@/components/ContactForm'
 import Modal from '@/components/modal'
 export default {
     components: {
-        ViewContact, Modal
+        ViewContact, Modal, ContactForm
     },
     data(){
         return{
@@ -110,14 +65,8 @@ export default {
 
         handleEditContact(obj){
             this.viewModal = !this.viewModal;
-            this.modalItem = 'form';
-            this.form = obj;
-        },
-
-        editContact(){
-            this.$store.dispatch('editContact', this.form);
-            this.viewModal = !this.viewModal;
-            alert('Contact updated successfully!');
+            this.modalItem = 'form-contact';
+            this.contact = obj;
         },
 
         deleteContact(obj){
@@ -130,13 +79,34 @@ export default {
 
     computed: {
         contacts(){
-            return this.$store.state.contact.contacts;
+            let contacts = this.$store.state.contact.contacts;
+
+            if(this.searchContact) return contacts.filter(n => {
+                return n.name.toLowerCase().includes(this.searchContact.toLowerCase())
+            });
+
+            if(this.searchLabel) return contacts.filter(n => n.label === this.searchLabel);
+            
+            return contacts;
+        },
+
+        title(){
+            let labels = this.$store.state.label.labels;
+
+            if(this.searchContact) return this.searchContact
+            if(this.searchLabel) return labels[this.searchLabel - 1].name;
+
+            return 'Contacts';
+        },
+
+        searchLabel(){
+            return this.$store.state.label.selectedLabel;
+        },
+
+        searchContact(){
+            return this.$store.state.contact.search;
         }
     },
-
-    beforeMount(){
-        // console.log(this.$store.state.contact.contacts)
-    }
 }
 </script>
 

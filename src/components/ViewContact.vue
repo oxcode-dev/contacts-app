@@ -7,7 +7,7 @@
             </div>
             <div style="padding: 10px; text-align:left">
                 <span class="subtitle is-4">{{ contact.name }}</span><br>
-                <span class="tag is-light">Added on 12/02/2019</span>
+                <span class="tag is-light">{{ contact.created_at }}</span>
             </div>
         </header>
         <hr style="margin:0">
@@ -27,6 +27,10 @@
                 <div class="details">
                     <span><i class="fas fa-map-marker-alt"></i> {{ contact.address }}</span>                            
                 </div>
+
+                <div class="details">
+                    <span><i class="fas fa-tag"></i> {{ label(contact.label) }}</span>                            
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +43,19 @@ export default {
         contact: {
             type: Object
         }
-    },  
+    },
+
+    computed: {
+        getAllLabels(){
+            return this.$store.state.label.labels;
+        }
+    },
+
+    methods: {
+        label(id){
+            return this.getAllLabels[id - 1].name;
+        }
+    }
 }
 </script>
 
@@ -59,6 +75,7 @@ export default {
 }
 .card-header{
     padding:10px;
+    text-transform: capitalize;
     box-shadow: none!important;
 }
 .photo {

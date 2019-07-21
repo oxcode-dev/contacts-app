@@ -1,9 +1,9 @@
 <template>
     <div class="header">
-        <div class="container">
+        <div class="container-fluid">
             <div class="columns">
                 <div class="column">
-                    <a class="navbar-item brand" href="https://bulma.io">
+                    <a class="navbar-item brand" href="#">
                         <i class="far fa-address-book fa-2x" style="margin-right: 10px"></i>
                         <span>ContactsBook</span>
                     </a>
@@ -11,14 +11,11 @@
                 <div class="column is-three-fifths">
                     <div class="field">
                         <p class="control has-icons-left has-icons-right">
-                            <input class="input searchbar" type="text" placeholder="Email">
+                            <input class="input searchbar" v-model="search" type="text" @keyup="searchContact" placeholder="Email">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-search"></i>
                             </span>
                         </p>
-                        <div>
-                            <ul class="autocomplete-results"></ul>
-                        </div>
                     </div>
                 </div>
                 <div class="column">
@@ -34,6 +31,24 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    data(){
+        return{
+            search: ''
+        }
+    },
+
+    methods: {
+        searchContact(){
+            this.$store.dispatch('labelSearchContact', '')
+            this.$store.dispatch('searchContact', this.search);
+        }
+    }
+}
+</script>
+
 
 
 <style scoped>
@@ -71,16 +86,6 @@
         transition-delay: .1s;
         width: 100%;
         box-sizing: border-box;
-        line-height: 1.5;
-    }
-    .autocomplete-results {
-        max-height: 900px;
-        position: absolute;
-        z-index: 1;
-        width: 100%;
-        box-sizing: border-box;
-        pointer-events: none;
-        top: 100%;
     }
 </style>
     
