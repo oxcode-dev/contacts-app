@@ -20,7 +20,8 @@ const labels = [
 export default {
     state: {
         labels: labels,
-        selectedLabel: ''
+        selectedLabel: '',
+        sidebar: true
     },
 
     mutations:{
@@ -36,9 +37,12 @@ export default {
         },
         LABEL_SEARCH_CONTACT(state, label){
             state.selectedLabel = label;
+        },
+        SIDEBAR(state, label){
+            state.sidebar = label;
         }
     },
-    
+
     actions: {
         addLabel(context, label){
             context.commit('ADD_LABEL', label);
@@ -51,7 +55,14 @@ export default {
         },
         labelSearchContact(context, label){
             context.commit('LABEL_SEARCH_CONTACT', label);
+        },
+        sidebar(context, label){
+            context.commit('SIDEBAR', label);
         }
     },
-    getters: {}
+    getters: {
+        getLabels: state => state.labels,
+        getSelectedLabel: state => state.selectedLabel,
+        getSidebar: state => state.sidebar
+    }
 }

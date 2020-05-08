@@ -1,54 +1,44 @@
 <template>
-    <div class="card">
-        <header class="card-header">
-            <div class="title is-4">{{ title }}</div>
+    <div class="bg-white rounded p-4 card">
+        <header class="p-2 text-left">
+            <h4 class="text-md font-bold">{{ title }}</h4>
         </header>
         <hr style="margin:0">
 
         <div class="card-content has-text-left">
             <div class="content">
                 <form @submit.prevent="createContact">
-                    <div class="field">
+                    <div class="text-left p-2">
                         <label class="label">Name</label>
-                        <div class="control">
-                            <input class="input" required v-model="form.name" type="text" placeholder="e.g John Doe">
-                        </div>
+                        <input class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" required v-model="form.name" type="text" placeholder="e.g John Doe">
                     </div>
 
-                    <div class="field">
+                    <div class="text-left p-2">
                         <label class="label">Email</label>
-                        <div class="control">
-                            <input class="input" required type="email" v-model="form.email" placeholder="e.g john@doe.com">
-                        </div>
+                        <input class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" required type="email" v-model="form.email" placeholder="e.g john@doe.com">
                     </div>
 
-                    <div class="field">
+                    <div class="text-left p-2">
                         <label class="label">Phone</label>
-                        <div class="control">
-                            <input class="input" required type="text" v-model="form.phone" placeholder="e.g +234 8090342345">
-                        </div>
+                        <input class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" required type="text" v-model="form.phone" placeholder="e.g +234 8090342345">
                     </div>
 
-                    <div class="field">
+                    <div class="text-left p-2">
                         <label class="label">Address</label>
-                        <div class="control">
-                            <input class="input" type="text" v-model="form.address" placeholder="e.g Lagos Nigeria">
-                        </div>
+                        <input class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" type="text" v-model="form.address" placeholder="e.g Lagos Nigeria">
                     </div>
 
-                    <div class="field">
+                    <div class="text-left p-2">
                         <label class="label">Label</label>
-                        <div class="control">
-                            <select class="input" v-model="form.label" placeholder="Select Label">
-                                <option v-for="(label, key) in getLabel" :key="key" :value="label.id">
-                                    {{ label.name }}
-                                </option>
-                            </select>
-                        </div>
+                        <select class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" v-model="form.label" placeholder="Select Label">
+                            <option v-for="(label, key) in getLabel" :key="key" :value="label.id">
+                                {{ label.name }}
+                            </option>
+                        </select>
                     </div>
 
-                    <div class="field">
-                        <button class="button is-primary">Save</button>
+                    <div class="text-left p-2">
+                        <button class="bg-blue-500 py-2 px-4 rounded text-white">Save</button>
                     </div>
                 </form>
             </div>
@@ -75,14 +65,12 @@ export default {
          createContact(){
             if(this.form.id){
                 this.$store.dispatch('editContact', this.form);
-                this.viewModal = !this.viewModal;
                 alert('Contact updated successfully!');
             }
             else{
                 this.form.id = this.lastItemId;
                 this.form.created_at = new Date();
                 this.$store.dispatch('addContact', this.form);
-                this.viewModal = !this.viewModal;
                 alert('Contact created successfully!');
             }
             this.$emit('close', false);

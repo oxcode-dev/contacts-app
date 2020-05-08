@@ -1,27 +1,21 @@
 <template>
-    <div class="card">
-        <header class="card-header">
-            <div class="title is-4">
-                {{ labelTitle }}
-            </div>
+    <div class="bg-white rounded p-4 card">
+        <header class="p-2 text-left">
+            <h4 class="text-md font-bold">{{ labelTitle }}</h4>
         </header>
         <hr style="margin:0">
 
-        <div class="card-content has-text-left">
-            <div class="content">
-                <form @submit.prevent="onSubmitLabel">
-                    <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                            <input class="input" required v-model="form.name" type="text" placeholder="e.g Associates">
-                        </div>
-                    </div>
+        <div class="text-left">
+            <form @submit.prevent="onSubmitLabel">
+                <div class="mt-4">
+                    <label class="label">Name</label>
+                    <input class="text-sm block p-3 rounded w-full bg-white border border-gray-300 placeholder-gray-600 shadow focus:placeholder-gray-500 my-1" required v-model="form.name" type="text" placeholder="e.g Associates">
+                </div>
 
-                    <div class="field">
-                        <button class="button is-primary">Save</button>
-                    </div>
-                </form>
-            </div>
+                <div class="mt-3">
+                    <button class="bg-blue-500 py-2 px-4 rounded text-white">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </template>

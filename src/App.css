@@ -1,0 +1,120 @@
+@import "../node_modules/tailwindcss/dist/components.min.css";
+@import "../node_modules/tailwindcss/dist/tailwind.min.css";
+@import "../node_modules/tailwindcss/dist/base.min.css";
+@import "../node_modules/tailwindcss/dist/utilities.min.css";
+@import "../node_modules/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
+
+#app {
+    font-family: 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+}
+body{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+.header{
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+}
+.header .brand{
+    font-family: 'Oswald', sans-serif;
+}
+a.brand{
+    background-color: transparent!important;
+    color: #ffffff!important;
+}
+a.brand > span{
+    font-size: 20px;
+}
+
+.sidebar {
+    width: 250px;
+    z-index: 9;
+}
+.sidebar .menu li div{
+    display: flex;
+    padding: 10px 25px;
+    text-align: left;
+    color: #48bb78;
+}
+.sidebar .menu li div:hover{
+    background-color:#48bb78;
+    border-radius: 0 25px 25px 0;
+    color: #ffffff;
+}
+.sidebar-link{
+    display: none !important;
+}
+.sidebar .menu li div:hover .sidebar-link{
+    display: flex !important;
+}
+.sidebar .menu li div:hover i{
+    color: #ffffff
+}
+@media only screen and (min-width: 992px) {
+    .close{
+        margin-left: 250px;
+    }
+}
+.title2{
+    letter-spacing: .07272727em;
+    font-size: .6875rem;
+    font-weight: 500;
+    line-height: 1rem;
+    text-transform: uppercase;
+    color: #5f6368;
+    display: flex;
+    padding: 10px;
+    max-height: 20px;
+}
+
+.options{
+    display: none !important;
+}
+#content div:hover .options{
+    display: block !important;
+}
+
+.card{
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+.photo {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.details{
+    margin-top: 8px;
+}
+.details i{
+    margin-right: 10px;
+}
+
+
+
+
+
+
+
+
+/* Extra small devices (phones, 600px and down) */
+/* @media only screen and (max-width: 600px) {...} */
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* @media only screen and (min-width: 600px) {...} */
+
+/* Medium devices (landscape tablets, 768px and up) */
+/* @media only screen and (min-width: 768px) {...} */
+
+/* Large devices (laptops/desktops, 992px and up) */
+/* @media only screen and (min-width: 992px) {...} */
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* @media only screen and (min-width: 1200px) {...} */

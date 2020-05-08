@@ -1,40 +1,39 @@
 <template>
-    <div style="padding: 20px 10px">
-        <div>
-            <p class="title2 is-5 is-uppercase has-text-left">{{ `${title} (${contacts.length})` }}</p>
-        </div>
-        <div>
-            <table class="table is-striped is-fullwidth  is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr v-for="(contact, key) in contacts" :key="key">
-                        <td>{{ contact.name }}</td>
-                        <td>{{ contact.phone }}</td>
-                        <td>{{ contact.email }}</td>
-                        <td>
-                            <div class="buttons are-small is-pulled-right">
-                                <button @click="handleViewContact(contact)" class="button is-small" title="View"><i class="fas fa-eye"></i></button>
-                                <button class="button is-small is-primary" @click="handleEditContact(contact)" title="Edit"><i class="fas fa-pen"></i></button>
-                                <button class="button is-small is-danger" @click="deleteContact(contact)" title="View"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="py-4" :class="getSidebar ? 'close' : ''">
+        <div class="mt-12">
+            <p class="title2 uppercase text-left mb-4">{{ `${title} (${contacts.length})` }}</p>
         </div>
 
-        <Modal :active.sync="viewModal" @closeViewContact="viewModal = $event">
-            <ViewContact :contact.sync="contact" v-if="modalItem === 'view'" />
+        <div class="table-stats w-full text-left">
+            <div class="text-gray-700 border-b border-b-gray-700 bg-gray-100 w-full">
+                <ul class="w-full mb-1 flex">
+                    <li class="p-3 w-full md:w-1/4 font-semibold">Name</li>
+                    <li class="p-3 md:w-1/4 font-semibold hidden md:block">Phone</li>
+                    <li class="p-3 md:w-1/4 font-semibold hidden md:block">Email</li>
+                    <li class="p-3 md:w-1/4 font-semibold hidden md:block"></li>
+                </ul>
+            </div>
 
-            <ContactForm :contact.sync="contact" class="card" v-if="modalItem === 'form-contact'" @close="viewModal = $event" />            
+            <perfect-scrollbar :style="heightStyle" id="content">
+                <div v-for="(contact, key) in contacts" :key="key" class="hover:bg-gray-100 text-gray-700 flex cursor-pointer">
+                    <div @click="handleViewContact(contact)" class="p-4 w-full md:w-1/4">{{ contact.name }}</div>
+                    <div @click="handleViewContact(contact)" class="p-4 md:w-1/4 hidden md:block">{{ contact.phone }}</div>
+                    <div @click="handleViewContact(contact)" class="p-4 md:w-1/4 hidden md:block">{{ contact.email }}</div>
+                    <div class="p-4 md:w-1/4 hidden md:block">
+                        <div class="text-right options">
+                            <button @click="handleViewContact(contact)" class="mr-3 text-gray-600" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="mr-3 text-green-500" @click="handleEditContact(contact)" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button class="mr-3 text-red-600 is-danger" @click="deleteContact(contact)" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </perfect-scrollbar>
+        </div>
+
+        <Modal :active.sync="viewModal" @close="viewModal = $event">
+            <ViewContact :contact.sync="contact" v-if="modalItem === 'view'" @close="viewModal = $event" />
+
+            <ContactForm :contact.sync="contact" class="card" v-if="modalItem === 'form-contact'" @close="viewModal = $event" />
         </Modal>
     </div>
 </template>
@@ -43,6 +42,7 @@
 import ViewContact from '@/components/ViewContact.vue'
 import ContactForm from '@/components/ContactForm'
 import Modal from '@/components/modal'
+import { mapGetters } from 'vuex'
 export default {
     components: {
         ViewContact, Modal, ContactForm
@@ -78,72 +78,35 @@ export default {
     },
 
     computed: {
+        ...mapGetters({
+            getContacts: 'getContacts',
+            searchLabel: 'getSelectedLabel',
+            searchContact: 'getSearch',
+            labels: 'getLabels',
+            getSidebar: 'getSidebar'
+        }),
+        heightStyle(){
+            return `height: ${this.window.height - 170}px`
+        },
+
         contacts(){
-            let contacts = this.$store.state.contact.contacts;
+            let contacts = this.getContacts;
 
             if(this.searchContact) return contacts.filter(n => {
                 return n.name.toLowerCase().includes(this.searchContact.toLowerCase())
             });
 
             if(this.searchLabel) return contacts.filter(n => n.label === this.searchLabel);
-            
+
             return contacts;
         },
 
         title(){
-            let labels = this.$store.state.label.labels;
-
             if(this.searchContact) return this.searchContact
-            if(this.searchLabel) return labels[this.searchLabel - 1].name;
+            if(this.searchLabel) return this.labels[this.searchLabel - 1].name;
 
             return 'Contacts';
-        },
-
-        searchLabel(){
-            return this.$store.state.label.selectedLabel;
-        },
-
-        searchContact(){
-            return this.$store.state.contact.search;
         }
     },
 }
 </script>
-
-
-
-
-<style scoped>
-/* Style the table */
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-}
-
-/* Style table headers and table data */
-th, td {
-  text-align: left;
-  padding: 16px;
-}
-
-th:first-child, td:first-child {
-  text-align: left;
-}
-.title2{
-    letter-spacing: .07272727em;
-    font-size: .6875rem;
-    font-weight: 500;
-    line-height: 1rem;
-    text-transform: uppercase;
-    color: #5f6368;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    padding: 10px 0 10px 10px;
-    max-height: 20px;
-}
-
-</style>

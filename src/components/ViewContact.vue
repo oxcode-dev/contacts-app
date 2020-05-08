@@ -1,40 +1,47 @@
 <template>
-    
-    <div class="card">
-        <header class="card-header">
-            <div>
+    <div class="bg-white rounded p-4 card">
+        <header class="flex items-center">
+            <div class="mr-2">
                 <img src="https://blog.ninapaley.com/wp-content/uploads/2011/05/avatar640clear0011.png" alt="Avatar" class="photo">
             </div>
             <div style="padding: 10px; text-align:left">
                 <span class="subtitle is-4">{{ contact.name }}</span><br>
-                <span class="tag is-light">{{ contact.created_at }}</span>
+                <span class="text-gray-500">{{ contact.created_at }}</span>
             </div>
         </header>
         <hr style="margin:0">
-
-        <div class="card-content has-text-left">
-            <div class="content">
-                <h5 class="subtitle is-5">Contact details</h5>
-
-                <div class="details">
-                    <span><i class="fas fa-phone"></i> {{ contact.phone }}</span>                            
-                </div>
-                
-                <div class="details">
-                    <span><i class="fas fa-at"></i> {{ contact.email }}</span>                            
-                </div>
-                
-                <div class="details">
-                    <span><i class="fas fa-map-marker-alt"></i> {{ contact.address }}</span>                            
-                </div>
-
-                <div class="details">
-                    <span><i class="fas fa-tag"></i> {{ label(contact.label) }}</span>                            
-                </div>
+         <div class="py-5 px-3">
+            <div class="flex justify-start items-center px-2 py-2">
+                <p class="flex text-gray-700">
+                    <i class="fas fa-phone mr-1"></i>
+                    Phone:
+                </p>
+                <p class="text-gray-500 font-thin ml-4">{{ contact.phone }}</p>
+            </div>
+            <div class="flex justify-start items-center px-2 py-2 bg-blue-100 rounded">
+                <p class="flex text-gray-700">
+                    <i class="fas fa-at mr-1"></i>
+                    Email:
+                </p>
+                <p class="text-gray-500 font-thin ml-4">{{ contact.email }}</p>
+            </div>
+            <div class="flex justify-start items-center px-2 py-2">
+                <p class="flex text-gray-700">
+                    <i class="fas fa-map-marker-alt mr-1"></i>
+                    Address:
+                </p>
+                <p class="text-gray-500 font-thin ml-4">{{ contact.address }}</p>
+            </div>
+            <div class="flex justify-start items-center px-2 py-2 bg-blue-100 rounded">
+                <p class="flex text-gray-700">
+                    <i class="fas fa-tag mr-1"></i>
+                    Label:
+                </p>
+                <p class="text-gray-500 font-thin ml-4"> {{ label(contact.label) }}</p>
             </div>
         </div>
     </div>
-        
+
 </template>
 
 <script>
@@ -53,42 +60,8 @@ export default {
 
     methods: {
         label(id){
-            return this.getAllLabels[id - 1].name;
+            return this.getAllLabels.find(n => n.id === id).name;
         }
     }
 }
 </script>
-
-
-<style scoped>
-.card{
-    background-color: #fff;
-    border-bottom: 1px solid #dadce0;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    display: table;
-    padding: 20px;
-    table-layout: fixed;
-    width: 100%;
-}
-.card-header{
-    padding:10px;
-    text-transform: capitalize;
-    box-shadow: none!important;
-}
-.photo {
-  vertical-align: middle;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-.details{
-    margin-top: 8px;
-}
-.details i{
-    margin-right: 10px;
-}
-</style>
-

@@ -18,7 +18,16 @@ let contacts = [
         address: 'No 44, Commercial Avenue, Sabo, Yaba, Lagos',
         label: 2,
         created_at: new Date()
-    }
+    },
+    {
+        id: 3,
+        name: 'Samuel',
+        email: 'sam11@tedbree.com',
+        phone: '+234 8034538651',
+        address: 'No 44, Commercial Avenue, Sabo, Yaba, Lagos',
+        label: 1,
+        created_at: new Date()
+    },
 ];
 
 export default {
@@ -52,7 +61,7 @@ export default {
         addContact(context, contact){
             context.commit('ADD_CONTACT', contact)
         },
-        
+
         deleteContact(context, id){
             context.commit('DELETE_CONTACT', id);
         },
@@ -61,5 +70,8 @@ export default {
             context.commit('SEARCH_CONTACT', search);
         },
     },
-    getters: {}
+    getters: {
+        getContacts: state => state.contacts,
+        getSearch: state => state.search
+    }
 }
