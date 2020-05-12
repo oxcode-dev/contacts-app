@@ -2,7 +2,18 @@
     <div class="header">
 
         <div class="bg-green-500 p-2">
-            <div class="flex items-center justify-between">
+            <div class="w-full md:hidden" v-if="active">
+                <div class="w-full">
+                    <div class="w-full h-10 px-2 bg-white border rounded flex justify-between items-center relative">
+                        <input type="search" v-model="search" @keyup="searchContact" placeholder="Search" class="appearance-none w-full outline-none focus:outline-none active:outline-none"/>
+                        <button type="submit" class="ml-1 outline-none focus:outline-none active:outline-none" @click="active = !active">
+                           <svg class="w-6 h-6 text-gray-500" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between" v-if="!active">
                 <div class="w-2/3 md:w-1/4 flex justify-between items-center">
                     <div class="flex items-center">
                         <a href="#" class="text-white" @click.prevent="sidebar">
@@ -32,7 +43,7 @@
 
                 <div class="w-1/3 md:w-1/4 ml-2">
                     <div class="cursor-pointer mr-2 text-white flex items-center justify-end">
-                        <button type="submit" class="my-1 mx-2 outline-none focus:outline-none active:outline-none md:hidden">
+                        <button type="submit" class="my-1 mx-2 outline-none focus:outline-none active:outline-none md:hidden" @click="active = !active">
                             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 viewBox="0 0 24 24" class="w-6 h-6">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -53,7 +64,8 @@ import { mapGetters } from 'vuex'
 export default {
     data(){
         return{
-            search: ''
+            search: '',
+            active: false
         }
     },
 
